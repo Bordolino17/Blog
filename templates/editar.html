@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="static/css/boostrap/bootstrap-min.css">
+<!-- Ej title 
+	<link ... > se referencia el style css(href)-->
+<title>Editar</title>
+</head>
+<body>
+<!-- en el body va todo el codigo -->
+	<div class="container">
+	<center>	<form name="formulario" action="" method="post">
+		<div class="row">
+			<p>Titulo: </p><input type="text" name="titulo" value=" {{ res.titulo }}" ><br>
+		</div>
+		<div class="row">
+			<p>Contenido</p><textarea   name="message" rows="10" cols="30">{{ res.contenido }}
+			</textarea>
+		</div>
+			<input class=" btn btn-primary" type="submit" value="Guardar">
+		</form></center>
+	</div>
+	
+</body>
+</html>

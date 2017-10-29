@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
+<!-- Ej title 
+	<link ... > se referencia el style css(href)-->
+<title>Blog</title>
+</head>
+<body>
+<!-- en el body va todo el codigo  agregar boostrap-->
+	<div class="container">
+		<div class="row">
+			<center><h1 class="h1">Blog</h1></center>
+		</div>
+		<div class="row">
+			<h1 class="h3">Bienvenido {% if user %} {{ user }} {% endif %}</h1>
+			
+			<center><form action="" method="post">
+				<input class="btn btn-primary" type="submit" name="agregar" value="agregar">
+				{% if user %}  
+				<a href="/logout">Logout</a>
+				{% else %}
+					<a href="/login">Login</a>
+				{% endif %}
+			</form></center>
+		<hr style="width: 100%; color: black; height: 1px; background-color:black;">
+		</div>
+		<div class="row">
+			<center>
+				{%for i in bloglist %}
+		<div class="panel panel-default">
+				<div class="panel-heading">
+					<dt>{{ i.titulo }}</dt>
+				</div>
+				<div class="panel-body">
+					<p>{{ i.contenido }}</p>
+				</div>
+		</div>
+		<form action="" method="post">
+			<input class=" btn btn-primary" type="submit" value="Eliminar" name="eliminar">
+			<input type="hidden" name="id" value={{ i.id }}>
+			<input class=" btn btn-primary" type="submit" value="Editar" name="editar">
+		</form><hr style="width: 100%; color: black; height: 1px; background-color:black;">
+				{% endfor %}</center>
+	</div>
+
+</body>
+</html>

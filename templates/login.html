@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+
+    <form action="" method='post'>
+   <center> 
+        <p>Usuaio:</p>
+        <input type="text" name="usuario">
+        <p>Contraseña</p>
+        <input type="password" name="contrasena">
+        <input type="submit" value="Ingresar" name="ingresar">
+		<input type="submit" value="Registrarse" name="registrarse"></center>
+		
+    </form>
+    {% if error %}
+    <hr></hr>
+        <p> Contrasena y/o usurio No son correctos</p>
+    {% endif %}
+{% endblock %}
