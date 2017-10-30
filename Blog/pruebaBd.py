@@ -1,0 +1,132 @@
+from flask import Flask,render_template
+from flask import request,redirect,url_for
+from flask import session as session_login
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from database_setup import Base,Blog,User
+import hashlib
+
+
+#def hashear(nombre,passw,semilla):
+	#semilla=random(letras y numeros
+	#devuelvo semilla y hash
+	
+#para dehashear paso nombre passw y con la semilla separada por , vuelvo a hashear 
+
+app=Flask(__name__)
+
+engine=create_engine("sqlite:///blog.db")
+Base.metadata.bind=engine
+DBSession=sessionmaker(bind=engine)
+session=DBSession()
+
+@app.route('/',methods=['GET','POST']) #blog.columna
+def showMain():
+	#activar=False
+	user=""
+	if "username" in session_login:
+		user=session_login["username"]
+	if request.method=='POST':
+		if request.form.get('agregar'):
+			return redirect(url_for('agregar'))
+		elif request.form.get('eliminar'):
+			id=request.form["id"]
+			return redirect(url_for('eliminar',id=id))
+		elif request.form.get('login'):
+			return redirect(url_for("login"))
+		elif request.form.get("editar"):
+			id=request.form["id"]
+			return redirect(url_for("editar",id=id))
+	
+	bloglist=session.query(Blog).all()
+	
+	
+	return render_template('index2.html',bloglist=bloglist,user=user)
+	
+@app.route('/agregar',methods=["GET","POST"])
+def agregar():
+	#codigo apra agregar base de datos
+	if request.method=='POST':
+		titulo=request.form["titulo"]
+		contenido=request.form["message"]
+		blog=Blog()
+		blog.titulo=titulo
+		blog.contenido=contenido
+		session.add(blog)
+		session.commit()
+		return redirect(url_for("showMain"))
+
+	return render_template('add.html')
+	
+@app.route('/eliminar',methods=["GET","POST"])
+def eliminar():
+#codigo para eliminar
+	if not "username" in session_login:
+		return redirect(url_for("showMain"))
+	id=request.args.get('id')
+	res=session.query(Blog).filter_by(id=id).one()
+	if request.method=="POST":
+		session.delete(res)
+		session.commit()
+		return redirect(url_for("showMain"))
+
+	return render_template('del.html',id=id,bloglist=res)
+
+@app.route('/login',methods=["GET","POST"])
+def login():
+	error=""
+	if request.method=="POST":
+		if request.form.get("ingresar"):
+			res=session.query(User).filter_by(
+				username=request.form["usuario"],
+				password=request.form["contrasena"]).first()
+			if not res:
+				error="usuario no registrado"
+			else:
+				session_login["username"]=request.form["usuario"]
+				return redirect(url_for("showMain"))
+			
+		elif request.form.get('registrarse'):
+			return redirect(url_for('registrar'))
+	
+	return render_template('login.html',error=error)
+	
+	
+@app.route("/registrarse",methods=["GET","POST"])
+def registrar():
+	if request.method=="POST":
+		nuevousuario= User(
+			username=request.form["usuario"],
+			password=request.form["pass"],
+			email=request.form["mail"])
+		session.add(nuevousuario)
+		session.commit()
+		session_login['username']=request.form["usuario"]
+		return redirect(url_for('showMain',user=session_login["username"]))
+		
+	
+	return render_template('registrarse.html')
+	
+@app.route("/logout",methods=["GET","POST"])
+def logout():
+	del session_login["username"]
+	return redirect(url_for("showMain"))
+
+	
+@app.route("/editar",methods=["GET","POST"])
+def editar():
+	if not "username" in session_login:
+		return redirect(url_for("showMain"))
+	id=request.args.get('id')
+	res=session.query(Blog).filter_by(id=id).one()
+	if request.method=="POST":
+		res.titulo=request.form["titulo"]
+		res.contenido=request.form["message"]
+		session.commit()
+		return redirect(url_for("showMain"))
+	return render_template("editar.html",res=res)
+	
+if __name__ == '__main__':
+	app.secret_key="secret key"
+	app.debug=True
+	app.run(host='0.0.0.0', port=8080)
