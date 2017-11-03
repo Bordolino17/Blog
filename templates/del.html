@@ -17,5 +17,11 @@
 	<form action="" method="post">
 		<input type="submit" name='Si' value="Si">
 	</form>
+	  {% if error %}
+    <hr></hr>
+        <p> No puede eliminar un Post que no sea de Usted</p>
+		<script> alert("No puede eliminar un post que no sea de usted")
+		window.location.href ="/"</script>
+    {% endif %}
 </body>
 </html>

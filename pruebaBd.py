@@ -4,7 +4,7 @@ from flask import session as session_login
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base,Blog,User
-import haslib
+#import haslib
 
 
 #def hashear(nombre,passw,semilla):
@@ -12,7 +12,7 @@ import haslib
 	#devuelvo semilla y hash
 	
 #para dehashear paso nombre passw y con la semilla separada por , vuelvo a hashear 
-
+error=""
 app=Flask(__name__)
 
 engine=create_engine("sqlite:///blog.db")
@@ -45,13 +45,17 @@ def showMain():
 	
 @app.route('/agregar',methods=["GET","POST"])
 def agregar():
+	user=""
 	#codigo apra agregar base de datos
 	if request.method=='POST':
 		titulo=request.form["titulo"]
 		contenido=request.form["message"]
+		if "username" in session_login:
+			user=session_login["username"]
 		blog=Blog()
 		blog.titulo=titulo
 		blog.contenido=contenido
+		blog.creador=user
 		session.add(blog)
 		session.commit()
 		return redirect(url_for("showMain"))
@@ -65,12 +69,15 @@ def eliminar():
 		return redirect(url_for("showMain"))
 	id=request.args.get('id')
 	res=session.query(Blog).filter_by(id=id).one()
-	if request.method=="POST":
+	if request.method=="POST" and (session_login["username"]==res.creador or session_login["username"]=="admin") :
 		session.delete(res)
 		session.commit()
+		error=True
 		return redirect(url_for("showMain"))
+	else:
+		error=True
 
-	return render_template('del.html',id=id,bloglist=res)
+	return render_template('del.html',id=id,bloglist=res,error=error)
 
 @app.route('/login',methods=["GET","POST"])
 def login():

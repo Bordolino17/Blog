@@ -3,7 +3,7 @@
 <head>
 	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	
+	<link rel="stylesheet" href="static/css/boostrap/bootstrap-min.css">
 <!-- Ej title 
 	<link ... > se referencia el style css(href)-->
 <title>Blog</title>
@@ -32,7 +32,8 @@
 				{%for i in bloglist %}
 		<div class="panel panel-default">
 				<div class="panel-heading">
-					<dt>{{ i.titulo }}</dt>
+					<dt class="col-md-2">{{ i.titulo }}</dt>
+					<dt class="col-md-2">{{ i.creador }}</dt>
 				</div>
 				<div class="panel-body">
 					<p>{{ i.contenido }}</p>
@@ -45,6 +46,6 @@
 		</form><hr style="width: 100%; color: black; height: 1px; background-color:black;">
 				{% endfor %}</center>
 	</div>
-
+{% if error %} <script> alert("No puede eliminar un post que no sea de usted")</script>{% endif %}
 </body>
 </html>

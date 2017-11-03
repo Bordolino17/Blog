@@ -13,6 +13,7 @@ class Blog(Base):
 	id=Column(Integer,primary_key=True)
 	titulo=Column(String(50),nullable=False)
 	contenido=Column(String(280),nullable=False)
+	creador=Column(String(50),nullable=False)
 
 	
 	
