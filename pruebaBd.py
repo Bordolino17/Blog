@@ -4,8 +4,21 @@ from flask import session as session_login
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base,Blog,User
-#import haslib
+import hashlib
 
+def crear_semilla():
+	return ''.join(random.choice(
+			string.ascii_uppercase+string.digits) for x in range(32)) #crea el largo de la semilal de 32
+			
+def hashear(name,pw,semilla=None):
+	if not semilla:
+		semilla=crear_semilla()
+	h=hashlib.sha256((name+pw+semilla).encode('utf-8')).hexdigest()
+	return '%s,%s' % (semilla,h)
+
+def validar_pw(name,password,h):
+	semilla=h.split(',')[0]
+	return h==hashear(name,password,semilla)
 
 #def hashear(nombre,passw,semilla):
 	#semilla=random(letras y numeros
