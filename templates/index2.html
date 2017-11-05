@@ -15,8 +15,10 @@
 			<center><h1 class="h1">Blog</h1></center>
 		</div>
 		<div class="row">
-			<h1 class="h3">Bienvenido {% if user %} {{ user }} {% endif %}</h1>
-			
+			<div class="row">
+			<div class="col-md-4"><h1 class="h3 ">Bienvenido {% if user %} {{ user }} {% endif %}</h1></div>
+			<div class="col-md-2 pull-right"><img src={% if user %} {{ imga }} {% else %} "http://www.lannet.net/wp-content/uploads/2015/03/lannet-cisco-iwan-usuario-100x100.png" {% endif %} class="img-responsive  img-circle"></div>
+			</div>
 			<center><form action="" method="post">
 				<input class="btn btn-primary" type="submit" name="agregar" value="agregar">
 				{% if user %}  
@@ -32,8 +34,7 @@
 				{%for i in bloglist %}
 		<div class="panel panel-default">
 				<div class="panel-heading">
-					<dt class="col-md-2">{{ i.titulo }}</dt>
-					<dt class="col-md-2">{{ i.creador }}</dt>
+					<dt>{{ i.titulo }}</dt>
 				</div>
 				<div class="panel-body">
 					<p>{{ i.contenido }}</p>

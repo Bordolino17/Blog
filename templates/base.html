@@ -11,9 +11,11 @@
 			<center><h1 class="h1">Blog</h1></center>
 		</div>
 		<div class="row">
-			<h1 class="col-md6 h3">Bienvenido {% if user %} {{ user }} {% endif %}</h1>
-			<div class="col-md-3"><img src="{% if img %} {{ img }} {% else %} http://placeimg.com/100/100/arch {% endif %}" class="img-responsive center-block img-circle"></div>
-</div>
+			<div class="row">
+			<div class="col-md-4"><h1 class="h3 ">Bienvenido {% if user %} {{ user }} {% endif %}</h1></div>
+			<div class="col-md-2 pull-right"><img src={% if user %} {{ imga }} {% else %} "http://www.lannet.net/wp-content/uploads/2015/03/lannet-cisco-iwan-usuario-100x100.png" {% endif %} class="img-responsive  img-circle"></div>
+			</div>
+
     {% block body %}{% endblock %}
 </body>
 </html>
