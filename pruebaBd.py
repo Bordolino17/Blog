@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base,Blog,User
 import hashlib
+import random, string
 
 def crear_semilla():
 	return ''.join(random.choice(
@@ -77,11 +78,21 @@ def agregar():
 	
 @app.route('/eliminar',methods=["GET","POST"])
 def eliminar():
+	error=False
 #codigo para eliminar
 	if not "username" in session_login:
 		return redirect(url_for("showMain"))
 	id=request.args.get('id')
 	res=session.query(Blog).filter_by(id=id).one()
+<<<<<<< HEAD
+	if request.method=="POST" :
+		if (session_login["username"]==res.creador or session_login["username"]=="admin"):
+			session.delete(res)
+			session.commit()
+			error=False
+		else:
+			error=True
+=======
 	if request.method=="POST" and (session_login["username"]==res.creador or session_login["username"]=="admin") :
 		session.delete(res)
 		session.commit()
@@ -89,6 +100,7 @@ def eliminar():
 		return redirect(url_for("showMain"))
 	else:
 		error=True
+>>>>>>> cea0ba8a735ca923d7211e88fe7867f216a90e9c
 
 	return render_template('del.html',id=id,bloglist=res,error=error)
 
@@ -117,7 +129,7 @@ def registrar():
 	if request.method=="POST":
 		nuevousuario= User(
 			username=request.form["usuario"],
-			password=request.form["pass"],
+			password=hashear(request.form["usuario"],request.form["pass"]),
 			email=request.form["mail"])
 		session.add(nuevousuario)
 		session.commit()
@@ -140,10 +152,13 @@ def editar():
 	id=request.args.get('id')
 	res=session.query(Blog).filter_by(id=id).one()
 	if request.method=="POST":
-		res.titulo=request.form["titulo"]
-		res.contenido=request.form["message"]
-		session.commit()
-		return redirect(url_for("showMain"))
+		if (session_login["username"]==res.creador or session_login["username"]=="admin"):
+			res.titulo=request.form["titulo"]
+			res.contenido=request.form["message"]
+			session.commit()
+			return redirect(url_for("showMain"))
+		else:
+			return redirect(url_for('showMain'))
 	return render_template("editar.html",res=res)
 	
 if __name__ == '__main__':
