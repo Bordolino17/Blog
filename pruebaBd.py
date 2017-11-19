@@ -6,6 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base,Blog,User
 import hashlib
 import random, string
+import datetime
 
 def crear_semilla():
 	return ''.join(random.choice(
@@ -70,6 +71,7 @@ def agregar():
 		blog.titulo=titulo
 		blog.contenido=contenido
 		blog.creador=user
+		blog.fecha_creacion=datetime.datetime.now()
 		session.add(blog)
 		session.commit()
 		return redirect(url_for("showMain"))
@@ -109,15 +111,14 @@ def login():
 	error=""
 	if request.method=="POST":
 		if request.form.get("ingresar"):
-			res=session.query(User).filter_by(
-				username=request.form["usuario"],
-				password=request.form["contrasena"]).first()
-			if not res:
-				error="usuario no registrado"
-			else:
+			res=session.query(User).filter_by(username=request.form["usuario"]).first()
+			
+			if res and validar_pw(request.form["usuario"],request.form["contrasena"],res.password):
+                                
 				session_login["username"]=request.form["usuario"]
 				return redirect(url_for("showMain"))
-			
+			else:
+				error="usuario no registrado"
 		elif request.form.get('registrarse'):
 			return redirect(url_for('registrar'))
 	

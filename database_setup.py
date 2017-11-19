@@ -1,19 +1,19 @@
 import sys
-from sqlalchemy import Column, ForeignKey, Integer,String,Date
+from sqlalchemy import Column, ForeignKey, Integer,String,DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-import datetime
+
 
 Base=declarative_base()
 
 class Blog(Base):
 	__tablename__='blog'
-	
 	id=Column(Integer,primary_key=True)
 	titulo=Column(String(50),nullable=False)
 	contenido=Column(String(280),nullable=False)
 	creador=Column(String(50),nullable=False)
+	fecha_creacion=Column(DateTime,nullable=False)
 
 	
 	
