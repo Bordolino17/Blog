@@ -86,23 +86,21 @@ def eliminar():
 		return redirect(url_for("showMain"))
 	id=request.args.get('id')
 	res=session.query(Blog).filter_by(id=id).one()
+	#if request.method=="POST" :
+		#if (session_login["username"]==res.creador or session_login["username"]=="admin"):
+		#	session.delete(res)
+		#	session.commit()
+		#	error=False
+		#else:
+		#	error=True
 
-	if request.method=="POST" :
-		if (session_login["username"]==res.creador or session_login["username"]=="admin"):
-			session.delete(res)
-			session.commit()
-			error=False
-		else:
-			error=True
-
-	if request.method=="POST" and (session_login["username"]==res.creador or session_login["username"]=="admin") :
+	if request.method=="POST"  :
 		session.delete(res)
 		session.commit()
-		error=True
+		error=False
 		return redirect(url_for("showMain"))
-	else:
+	elif not (session_login["username"]==res.creador or session_login["username"]=="admin"):
 		error=True
-
 
 	return render_template('del.html',id=id,bloglist=res,error=error)
 

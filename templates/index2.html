@@ -38,7 +38,7 @@
 				<div class="panel-heading row">
 					<div class="col-xs-4 text-center"><dt>{{ i.titulo }}</dt></div>
 					<div class="col-xs-2 pull-right">{{ i.creador}}</div><br>
-					<div class=" h6 pull-right">{{i.fecha_creacion}}</div>
+					<div class=" h6 pull-right">{{i.fecha_creacion.strftime("%x %H:%M")}}</div>
 				    
 				</div>
 				<div class="panel-body">
@@ -54,7 +54,7 @@
 	</div>
 
 <!--{% if error %} <script> alert("No puede eliminar un post que no sea de usted")</script>{% endif %}-->
-{% if error %} <script> alert("No puede eliminar un post que no sea de usted")</script>{% endif %}
+<!--{% if error %} <script> alert("No puede eliminar un post que no sea de usted")</script>{% endif %}-->
 
 </body>
 </html>
